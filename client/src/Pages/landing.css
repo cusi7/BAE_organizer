@@ -1,0 +1,11 @@
+.landing {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-image: url("https://res.cloudinary.com/cusi/image/upload/v1657240227/BAE_app/fondo_landing_gwlaju.jpg");
+    background-size: 90%;
+    background-position: right;
+    background-repeat: no-repeat;
+    /* background-attachment: fixed;    */
+   
+}  

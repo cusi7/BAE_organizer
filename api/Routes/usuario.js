@@ -10,7 +10,6 @@ const router = Router();
 router.post('/registro', async(req, res) => {
     try {
         const { name, email, password} = req.body;
-        const img = req.body.data;
 
         const useName = await User.findOne({where: {name}});
         const useEmail = await User.findOne({where: {email}});
@@ -23,22 +22,11 @@ router.post('/registro', async(req, res) => {
         } else {
             const saltRounds = 10;
             const passwordHash = await bcrypt.hash(password, saltRounds);
-            let avatar;
-
-            if(img) {
-                const pathCloud = await cloudinary.uploads(img);
-    
-                console.log("uploaded image url => ", pathCloud);
-    
-                avatar = pathCloud.secure_url;
-                  
-            }
 
             const newUser = await User.create({
                 name, 
                 email, 
-                password: passwordHash,
-                avatar
+                password: passwordHash
                });
     
                res.json({type: 'success', msg: 'El usuario fue creado con éxito'})
