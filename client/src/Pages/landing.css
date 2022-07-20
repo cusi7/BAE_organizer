@@ -2,10 +2,15 @@
     height: 100%;
     width: 100%;
     position: absolute;
-    background-image: url("https://res.cloudinary.com/cusi/image/upload/v1657240227/BAE_app/fondo_landing_gwlaju.jpg");
-    background-size: 90%;
+    background-image: url("https://res.cloudinary.com/cusi/image/upload/v1658277444/BAE_app/landing_BAE_otbgok.png");
+    background-size: 80%;
     background-position: right;
-    background-repeat: no-repeat;
-    /* background-attachment: fixed;    */
-   
+    background-repeat: no-repeat;      
 }  
+
+@media (max-width: 1000px) {
+	.landing {
+        background-size: 140%;
+		background-position: right bottom;
+	}
+}

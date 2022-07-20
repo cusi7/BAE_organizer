@@ -3,6 +3,77 @@ const bcrypt = require ('bcrypt');
 const cloudinary = require ('../helpers/cloudinary.js');
 const {User, Application, Interview, Skill} = require('../db.js');
 
+const userRegistro = async(req, res, next) => {
+    try {
+        const { name, email, password} = req.body;
+
+        const useName = await User.findOne({where: {name: name}});
+        const useEmail = await User.findOne({where: {email: email}});
+
+        if(useName || useEmail) {
+            const mensaje = (
+                useName ? 'El nombre de usuario ya existe' : 'El email ya está registrado'
+            );
+            res.status(400).json({type: 'error', msg: mensaje })
+            
+        } else {
+            const saltRounds = 10;
+            const passwordHash = await bcrypt.hash(password, saltRounds);
+
+            const newUser = await User.create({
+                name, 
+                email, 
+                password: passwordHash
+               });
+
+            req.body = {
+                email,
+                password
+            };
+    
+               next();
+          
+            }
+    } catch (error) {
+        res.json(error)
+    }
+};
+
+const userLogin = async(req,res) => {
+    try {
+        const {email, password} = req.body;
+
+        const userEmail = await User.findOne({where: {email}});
+
+        if(!userEmail) {
+            res.status(400).json({type: 'error', msg: 'La dirección de email no está registrada'})
+        
+        } else if(userEmail) {
+            const pass = await bcrypt.compare(password, userEmail.password);
+
+            if(pass === false) {
+               res.status(400).json({type: 'error', msg: 'La contraseña es incorrecta'})
+            } else {
+                  // create token
+                  const token = jwt.sign({
+                    name: userEmail.name,
+                    id: userEmail.id
+                }, process.env.TOKEN_SECRET)
+
+                res.json({
+                    token: `Bearer ${token}`,
+                    mensaje: {type: 'success', msg: `Hola ${userEmail.name}!!!`, go: 'Home'},
+                })
+            }
+
+        }
+        
+    } catch (error) {
+        res.json(error)
+    }
+
+};
+
 const userSesion = async(req, res, next) => {
     try {
         const authHeader = req.headers["authorization"];
@@ -149,6 +220,8 @@ const deleteUser = async(req, res) => {
 
 
 module.exports = {
+    userRegistro,
+    userLogin,
     userSesion,
     userData,
     changes,

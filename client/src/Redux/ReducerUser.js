@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 
-import { ALERT, LIMPIAR_ALERT } from './ActionUser.js';
+import { ALERT, LIMPIAR_ALERT, GET_USER, LOG_OUT_USUARIO } from './ActionUser.js';
 
 
 const initialState = {
@@ -20,6 +20,18 @@ const userReducer = createReducer(initialState, (builder) => {
         return {
             ...state,
             alert: {}
+        }
+    })
+    .addCase(GET_USER, (state, action) => {
+        return {
+            ...state,
+            user: action.payload
+        }
+    })
+    .addCase(LOG_OUT_USUARIO, (state) => {
+        return {
+            ...state,
+            user: {}
         }
     })
 });

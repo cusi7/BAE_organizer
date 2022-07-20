@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useDispatch } from "react-redux";
 import TextField from '@mui/material/TextField';
@@ -9,36 +8,30 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { BaeButton1, ModalRL } from '../Component/Styled.js';
 import Alerta from '../Component/Alert.js';
 import { Validacion } from '../helper/Validacion.js';
-import { userRegister } from '../Redux/ActionUser.js';
+import { userLogin } from '../Redux/ActionUser.js';
 import { limpiarAlert } from '../Redux/ActionUser.js';
 
 
-
-export default function Register() {
+export default function Login() {
 
   const dispatch = useDispatch();
-
 
   const dismount = () => {
     dispatch(limpiarAlert())
   }
 
   React.useEffect(() => {
-    console.log('Crea tu cuenta');
+    console.log('Login');
 
     setErrors('');
     
     return () => dismount()
    }, []);
 
-
     const [values, setValues] = React.useState({
-      nombre: '',
       email: '',
       password: '',
-      passwordRepeat: '',
-      showPassword: false,
-      showPasswordR: false,
+      showPassword: false
     });
 
     const [errors, setErrors] = React.useState({});
@@ -58,33 +51,23 @@ export default function Register() {
           showPassword: !values.showPassword,
         });
       };
-
-      const handleClickShowPasswordR = () => {
-        setValues({
-          ...values,
-          showPasswordR: !values.showPasswordR,
-        });
-      };
-    
+   
       const handleMouseDownPassword = (event) => {
         event.preventDefault();
       };
 
       function disabledButton() {
-        if (Object.keys(errors).length > 0 || !values.nombre || !values.email || !values.password || !values.passwordRepeat) return true
+        if (Object.keys(errors).length > 0 || !values.email || !values.password) return true
         else return false
       };
 
-      async function registrarUsuario() {
+      async function loginUsuario() {
         try {
-          const usuarioCrear = {
-            name: values.nombre,
+          const usuario = {
             email: values.email,
             password: values.password
           };
-          const registro = await dispatch( userRegister(usuarioCrear) );
-
-         
+          await dispatch( userLogin(usuario) )
 
         }catch (error) {
           console.log(error)
@@ -96,24 +79,11 @@ export default function Register() {
   return (
     <>
     <Alerta />
-
     <ModalRL
       component="form"
       noValidate
       autoComplete="off"
     >
-
-        <TextField
-          required
-          error= {errors.nombre ? true : false}
-          id="nombre"
-          label="Nombre"
-          variant="filled"
-          value={values.nombre}
-          onChange={handleChange('nombre')}
-          helperText= {errors.nombre ? errors.nombre : ''}
-          sx={{ m: 1, width: '25ch' }}
-        />
         <TextField
           required
           error= {errors.email ? true : false}
@@ -149,37 +119,16 @@ export default function Register() {
           }}
         />
         
-        <TextField
-          error= {errors.passwordRepeat ? true : false}
-          id="passwordRepeat"
-          label="password"
-          variant="filled"
-          type={values.showPasswordR ? 'text' : 'password'}
-          value={values.passwordRepeat}
-          onChange={handleChange('passwordRepeat')}
-          helperText= {errors.passwordRepeat ? errors.passwordRepeat : ''}
-          sx={{ m: 1, width: '25ch' }}
-          InputProps={{
-            endAdornment:
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPasswordR}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {values.showPasswordR ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-          }}
-        />
         <BaeButton1
-        variant="outlined" size="medium" 
+         variant="outlined" size="medium" 
         disabled= {disabledButton()}
-        onClick={registrarUsuario}
+        onClick={loginUsuario}
         onMouseDown={handleMouseDownPassword}
         >
-          CREAR CUENTA
-      </BaeButton1>
-    </ModalRL>
+          INGRESAR
+        </BaeButton1>
+      
+     </ModalRL>
     </>
   );
 };

@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Button from '@mui/material/Button';
+import { useNavigate } from "react-router-dom";
 import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
 import Slide from '@mui/material/Slide';
 import MuiAlert from '@mui/material/Alert';
-import CloseIcon from '@mui/icons-material/Close';
+
 
 import { limpiarAlert } from '../Redux/ActionUser.js';
 
@@ -34,6 +33,7 @@ export default function Alerta() {
     }, [alertMsg]); 
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
  
       const handleClose = (reason) => {
         if (reason === 'clickaway') {
@@ -42,6 +42,10 @@ export default function Alerta() {
         setOpen(false);
         dispatch(limpiarAlert());
       };
+
+      if(alertMsg.go && alertMsg.go === 'Home') {
+        navigate("./bae", { replace: true });
+      }
 
 
   return (
